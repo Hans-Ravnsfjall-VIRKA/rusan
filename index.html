@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fo">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vínleiðarin · Rúsan</title>
+<style>
+:root{
+  --bg:#f2f2f7; --bg2:#ffffff; --card:#ffffff;
+  --label:#1d1d1f; --label2:#6b6b70; --label3:#a1a1a6;
+  --sep:rgba(60,60,67,.10);
+  --tint:#a4243b; --tint-press:#8c1d31; --tint-soft:rgba(164,36,59,.10);
+  --glass:rgba(255,255,255,.72); --glass-brd:rgba(255,255,255,.5);
+  --shadow:0 10px 40px -12px rgba(0,0,0,.18);
+  --gold:#c8a24a;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0a0a0b; --bg2:#1c1c1e; --card:#1c1c1e;
+    --label:#f5f5f7; --label2:#a1a1a6; --label3:#6b6b70;
+    --sep:rgba(255,255,255,.10);
+    --tint:#ff5a6e; --tint-press:#e04358; --tint-soft:rgba(255,90,110,.14);
+    --glass:rgba(28,28,30,.62); --glass-brd:rgba(255,255,255,.08);
+    --shadow:0 10px 40px -10px rgba(0,0,0,.6);
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--label);
+  font-family:-apple-system,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  min-height:100vh;
+}
+.app{max-width:480px; margin:0 auto; min-height:100vh; position:relative;
+  padding-bottom:env(safe-area-inset-bottom);}
+
+/* ---------- Liquid Glass top nav ---------- */
+.nav{position:sticky; top:0; z-index:30; height:52px; display:flex; align-items:center;
+  gap:12px; padding:0 16px;
+  background:var(--glass); backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--sep);
+  box-shadow:inset 0 1px 0 0 rgba(255,255,255,.4);}
+@media (prefers-color-scheme: dark){.nav{box-shadow:inset 0 1px 0 0 rgba(255,255,255,.05)}}
+.nav.hidden{display:none}
+.back{width:34px;height:34px;border:none;background:var(--tint-soft);color:var(--tint);
+  border-radius:50%; font-size:19px; cursor:pointer; display:grid;place-items:center;
+  transition:transform .15s, background .15s; flex:none}
+.back:active{transform:scale(.9)}
+.progress{flex:1; display:flex; gap:5px}
+.seg{flex:1;height:4px;border-radius:2px;background:var(--sep);overflow:hidden}
+.seg .fill{display:block;height:100%;width:0;background:var(--tint);border-radius:2px;
+  transition:width .4s cubic-bezier(.32,.72,0,1)}
+.seg.done .fill{width:100%}
+.seg.active .fill{width:100%}
+.navlbl{font-size:13px;color:var(--label2);font-weight:500;flex:none;min-width:34px;text-align:right}
+
+/* ---------- screens ---------- */
+.screen{padding:8px 20px 140px; animation:rise .42s cubic-bezier(.32,.72,0,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){
+  .screen{animation:fade .2s both} @keyframes fade{from{opacity:0}to{opacity:1}}
+  .seg .fill{transition:none}
+}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--tint);
+  text-transform:uppercase;margin:18px 0 6px}
+h1{font-size:33px;line-height:1.07;font-weight:700;letter-spacing:-.02em;margin:0 0 10px}
+.sub{font-size:17px;line-height:1.4;color:var(--label2);margin:0 0 8px;max-width:34ch}
+
+/* intro */
+.hero-mark{width:64px;height:64px;border-radius:18px;margin:34px 0 8px;
+  background:linear-gradient(160deg,#c0394f,#7b1f2b);
+  display:grid;place-items:center;font-size:32px;
+  box-shadow:0 14px 30px -10px rgba(164,36,59,.6), inset 0 1px 0 rgba(255,255,255,.4)}
+.stats{display:flex;gap:10px;margin:26px 0 0;flex-wrap:wrap}
+.stat{background:var(--card);border-radius:16px;padding:14px 16px;flex:1;min-width:96px;
+  box-shadow:var(--shadow)}
+.stat b{display:block;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.stat span{font-size:13px;color:var(--label2)}
+
+/* option grid (slag, matur) */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:18px}
+.tile{position:relative;background:var(--card);border:1.5px solid transparent;border-radius:18px;
+  padding:16px 14px;text-align:left;cursor:pointer;font-family:inherit;color:var(--label);
+  box-shadow:var(--shadow);transition:transform .12s, border-color .15s;display:flex;
+  flex-direction:column;gap:9px;min-height:84px}
+.tile:active{transform:scale(.97)}
+.tile.on{border-color:var(--tint);background:var(--tint-soft)}
+.tile .glyph{font-size:24px;line-height:1}
+.tile .dot{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.tile .tlabel{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.tile .tdesc{font-size:12.5px;color:var(--label2);margin-top:-4px}
+.tile .check{position:absolute;top:12px;right:12px;width:21px;height:21px;border-radius:50%;
+  background:var(--tint);color:#fff;display:none;place-items:center;font-size:13px}
+.tile.on .check{display:grid}
+
+/* list rows (fylla, søtleiki, prísur) */
+.list{margin-top:18px;background:var(--card);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.row{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;
+  border-bottom:1px solid var(--sep);transition:background .12s}
+.row:last-child{border-bottom:none}
+.row:active{background:var(--tint-soft)}
+.row .rlabel{flex:1;font-size:17px;font-weight:500}
+.row .rdesc{font-size:13px;color:var(--label2);font-weight:400}
+.row .tick{width:23px;height:23px;border-radius:50%;border:2px solid var(--sep);flex:none}
+.row.on .tick{border-color:var(--tint);background:var(--tint);position:relative}
+.row.on .tick::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;
+  color:#fff;font-size:13px}
+.bars{display:flex;gap:3px;align-items:flex-end;height:18px}
+.bars i{width:5px;background:var(--label3);border-radius:1px;display:block}
+.row.on .bars i{background:var(--tint)}
+
+/* ---------- results ---------- */
+.rcount{font-size:15px;color:var(--label2);margin:6px 0 16px}
+.wine{background:var(--card);border-radius:22px;padding:16px;margin-bottom:13px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden}
+.wine.top{border:1.5px solid var(--tint)}
+.topbadge{position:absolute;top:0;left:0;background:var(--tint);color:#fff;font-size:11px;
+  font-weight:600;letter-spacing:.03em;padding:5px 14px;border-bottom-right-radius:14px}
+.wtop{display:flex;gap:15px;align-items:flex-start;margin-top:2px}
+.bottle{width:56px;height:84px;flex:none;background:#fff;border-radius:10px;display:grid;
+  place-items:center;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.bottle img{max-width:90%;max-height:90%;object-fit:contain;mix-blend-mode:multiply}
+.whead{flex:1;min-width:0}
+.match{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.match .pct{font-size:13px;font-weight:700;color:var(--tint)}
+.match .meter{flex:1;height:5px;background:var(--sep);border-radius:3px;overflow:hidden;max-width:120px}
+.match .meter i{display:block;height:100%;background:var(--tint);border-radius:3px}
+.wname{font-size:18px;font-weight:700;letter-spacing:-.02em;line-height:1.12;margin:0 0 3px;
+  color:var(--label);text-decoration:none;display:block}
+.worigin{font-size:13px;color:var(--label2)}
+.wtags{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.t{font-size:12px;font-weight:500;padding:4px 9px;border-radius:8px;background:var(--bg);color:var(--label2)}
+.t.af{background:#e8f3ec;color:#2e7d4f}
+@media(prefers-color-scheme:dark){.t.af{background:rgba(46,125,79,.2);color:#7fd6a0}}
+.reasons{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.reason{font-size:12.5px;font-weight:500;padding:5px 10px;border-radius:9px;
+  background:var(--tint-soft);color:var(--tint);display:flex;align-items:center;gap:5px}
+.reason.soft{background:var(--bg);color:var(--label2)}
+.wnotes{font-size:14px;line-height:1.45;color:var(--label2);margin:12px 0 0}
+.wfoot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;
+  padding-top:13px;border-top:1px solid var(--sep)}
+.wprice{font-size:19px;font-weight:700;letter-spacing:-.01em}
+.wprice s{font-size:12px;font-weight:500;color:var(--label2);text-decoration:none}
+.rating{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--label2)}
+.stars{color:var(--gold);font-size:13px;letter-spacing:1px}
+.wlink{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:600;
+  color:var(--tint);text-decoration:none}
+.empty{text-align:center;padding:60px 24px;color:var(--label2)}
+.empty .e-ic{font-size:42px;margin-bottom:8px}
+
+.info{margin-top:22px;padding:16px;border-radius:16px;background:var(--card);box-shadow:var(--shadow);
+  font-size:12.5px;line-height:1.6;color:var(--label2)}
+.info b{color:var(--label)}
+.info .lg{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:5px;vertical-align:middle}
+
+/* ---------- Liquid Glass bottom action ---------- */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:14px 20px;
+  padding-bottom:calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(0deg,var(--bg) 30%,transparent);display:none}
+.dock.show{display:block}
+.app:has(.screen) .dock{max-width:480px;margin:0 auto}
+.btn{width:100%;border:none;border-radius:16px;padding:16px;font-size:17px;font-weight:600;
+  font-family:inherit;cursor:pointer;transition:transform .12s, opacity .15s}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--tint);color:#fff;box-shadow:0 8px 24px -8px var(--tint)}
+.btn.primary:disabled{opacity:.4;box-shadow:none}
+.btn.glass{background:var(--glass);backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);color:var(--tint);
+  border:1px solid var(--glass-brd);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 6px 20px -8px rgba(0,0,0,.2)}
+.center{text-align:center}
+.restart{display:block;margin:8px auto 0;background:none;border:none;color:var(--label2);
+  font-size:15px;font-family:inherit;cursor:pointer;padding:8px}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="nav hidden" id="nav">
+    <button class="back" id="back" aria-label="Aftur">‹</button>
+    <div class="progress" id="prog"></div>
+    <span class="navlbl" id="navlbl"></span>
+  </nav>
+  <main id="main"></main>
+  <div class="dock" id="dock"></div>
+</div>
+
+<script>
+/* ===================== REAL DATA — scraped from rusan.fo (Vín) ===================== *
+ * Fields tiknar beinleiðis frá síðuni: id, im(mynd), n(navn), c(land), a(styrki),
+ * v(stødd), p(prísur), pr(matmerki/íkon), no(lýsing).
+ * Løgd afturat (okkara dátur / demo): t/k(slag), b(fylla), s(søtleiki), dv(matur úr lýsing),
+ * r(meting), vo(atkvøður), af(alkoholfrítt).                                              */
+const C={US:["🇺🇸","USA"],FR:["🇫🇷","Frakland"],ES:["🇪🇸","Spania"],IT:["🇮🇹","Italia"],
+ AR:["🇦🇷","Argentina"],DE:["🇩🇪","Týskland"],FO:["🇫🇴","Føroyar"],ZA:["🇿🇦","Suðurafrika"],
+ PT:["🇵🇹","Portugal"],HU:["🇭🇺","Ungarn"]};
+const FOOD={fiskur:["🐟","Fiskur"],skeljadjor:["🦐","Skeljadjór"],flogfenadur:["🍗","Flogfenaður"],
+ neytakjot:["🥩","Neytakjøt"],kalvakjot:["🍖","Kalvakjøt"],lambskjot:["🐑","Lambskjøt"],
+ svinakjot:["🐖","Svínakjøt"],villinidjor:["🦌","Villinidjór"],ostur:["🧀","Ostur"],
+ dessertir:["🍰","Dessertir"],fordrykkir:["🥂","Fordrykkir"]};
+const BODY={1:"Lætt",2:"Miðal",3:"Kraftigt"};
+const SWEET={turt:"Turt",halvturt:"Hálvturt",sott:"Søtt"};
+
+const W=[
+ {id:"01-604505",im:1297,n:"Stonebarn Zinfandel",c:"US",t:"Reyðvín",k:"red",b:3,s:"turt",a:13.5,v:"0,75 l",p:132,pr:["flogfenadur","neytakjot"],dv:[],r:4.1,vo:23,no:"Anga av ymsum berum og krydd. Smakkur av búnum berum, frukt og krydd. Hóskar til ymsar grillaðar rættir og pastarættir."},
+ {id:"92-151537",im:4073,n:"19 Crimes Snoop Cali Red",c:"US",t:"Reyðvín",k:"red",b:2,s:"halvturt",a:13,v:"0,75 l",p:128.5,pr:["neytakjot","villinidjor"],dv:[],r:3.9,vo:71,no:"Saftmikið og bleytt amerikanskt reyðvín við søtligum undirtóna."},
+ {id:"04-000135",im:4143,n:"2015 Bollinger La Grande Année",c:"FR",t:"Champagne",k:"sparkling",b:2,s:"turt",a:12.5,v:"0,75 l",p:1100,pr:[],dv:["fordrykkir","skeljadjor"],r:4.8,vo:9,no:"Eitt av heimsins mest umtóktu árgangschampagnum. Kraftigt, mineralskt og elegant."},
+ {id:"02-304414",im:3751,n:"2CV Sumarroca Orange Wine",c:"ES",t:"Orangevín",k:"orange",b:2,s:"turt",a:11.5,v:"0,75 l",p:132.5,pr:[],dv:["svinakjot","lambskjot"],r:4.0,vo:14,no:"Miðal kraftigt orangevín við góðum tanninum. Angar av hunangi og kardamummum. Hóskar til barbecue, koreanskan mat, soppar, grís- og lambskjøt."},
+ {id:"04-407114",im:2984,n:"Abbazia Moscato Rosé Dolce",c:"IT",t:"Brúsandi rósuvín",k:"sparkling",b:1,s:"sott",a:7,v:"0,75 l",p:81,pr:["dessertir","fordrykkir"],dv:[],r:4.3,vo:38,no:"Søtt brúsandi vín. Lættur smakkur av frískari frukt, grape og rósum. Hóskar til dessert og sum fordrykkur."},
+ {id:"02-905120",im:1551,n:"Alamos Chardonnay",c:"AR",t:"Hvítvín",k:"white",b:2,s:"turt",a:13.5,v:"0,75 l",p:97,pr:["fiskur","flogfenadur","svinakjot"],dv:[],r:4.0,vo:42,no:"Bleytur kryddaður fruktsmakkur við nakað av eik. Góð fylla. Hóskar til feitan fisk, royktan laks og lættar kjøtrættir."},
+ {id:"01-905120",im:2162,n:"Alamos Malbec",c:"AR",t:"Reyðvín",k:"red",b:3,s:"turt",a:13.5,v:"0,75 l",p:97,pr:["flogfenadur","kalvakjot","lambskjot","neytakjot","ostur","villinidjor"],dv:[],r:4.4,vo:96,no:"Kraftigur og lætt royktur angi. Bleytur og rundur smakkur við frukt og krydd. Hóskar til kraftmiklar rættir av lambs- og neytakjøti, villini djór og búnan ost."},
+ {id:"02-304216",im:3773,n:"Alba Martin Albariño",c:"ES",t:"Hvítvín",k:"white",b:1,s:"turt",a:12,v:"0,75 l",p:129.5,pr:["fiskur","skeljadjor"],dv:[],r:4.2,vo:18,no:"Turt vín við mineralskum dámi. Ber brá av sitrus, peru, grasi og mandlum. Hóskar til vegetarrættir, ljósan fisk og skeljadjór."},
+ {id:"02-123188",im:3697,n:"Albert Sounit Montagny 1er Cru",c:"FR",t:"Hvítvín",k:"white",b:2,s:"turt",a:13.5,v:"0,75 l",p:350.5,pr:[],dv:["fiskur","skeljadjor"],r:4.5,vo:7,no:"Angar av súreplum, smøri og vanilju. Kraftmikil og mineralskur við góðari sýru. Hóskar til feitan fisk, sjógæti og asparges."},
+ {id:"02-121580",im:3292,n:"Alsace Riesling Haut Rhin 37,5 cl",c:"FR",t:"Hvítvín",k:"white",b:1,s:"turt",a:12,v:"0,38 l",p:80.5,pr:["fiskur","skeljadjor"],dv:[],r:3.8,vo:15,no:"Turt, lætt og frískligt við smakki av sitrus og góðari sýru. Hóskar til lættar fiskarættir og skeljadjór."},
+ {id:"02-400662",im:3752,n:"Alta Mora Etna Bianco",c:"IT",t:"Hvítvín",k:"white",b:2,s:"turt",a:13,v:"0,75 l",p:189,pr:["fiskur","ostur","skeljadjor"],dv:[],r:4.3,vo:12,no:"Ber brá av búnum súreplum, vátum steini, salti og royki. Miðal kraftigt við góðari sýru. Hóskar til stoktan fisk, krækling og harðan ost."},
+ {id:"01-400662",im:3746,n:"Alta Mora Etna Rosso",c:"IT",t:"Reyðvín",k:"red",b:2,s:"turt",a:14,v:"0,75 l",p:189,pr:["lambskjot"],dv:["ostur","svinakjot"],r:4.2,vo:16,no:"Miðal kraftmikið vín ið ber brá av tranaberum, royki og kirsiberum. Hóskar til saltar ostar, pylsur, pasta og rættir við lambs- og svínakjøti."},
+ {id:"01-400333",im:1890,n:"Alto Bello Rosso 300 cl",c:"IT",t:"Reyðvín",k:"red",b:2,s:"turt",a:13,v:"3,00 l",p:276.5,pr:["flogfenadur","lambskjot","neytakjot","svinakjot"],dv:[],r:3.7,vo:51,no:"Kryddaður angi av búnum berum og nelikku. Lættur og rundur smakkur. Hóskar til lættar kjøtrættir, pitsu ella lasagnu."},
+ {id:"02-300393",im:2999,n:"Amadeus Blanco 300 cl",c:"ES",t:"Hvítvín",k:"white",b:1,s:"halvturt",a:12,v:"3,00 l",p:244,pr:["fiskur","fordrykkir","skeljadjor","svinakjot"],dv:[],r:3.6,vo:27,no:"Hálvturt, frískt og fruktríkt. Hóskar til ljósar kjøtrættir, fisk og skeljadjór ella sum fordrykkur."},
+ {id:"01-402189",im:3971,n:"Amarone Colognola Valpolicella",c:"IT",t:"Reyðvín",k:"red",b:3,s:"turt",a:15,v:"0,75 l",p:234.5,pr:["flogfenadur","kalvakjot","lambskjot","ostur","villinidjor"],dv:[],r:4.6,vo:34,no:"Djúpur reyður litur. Bleytur og rundur fruktsmakkur við góðari fyllu og langum heitum ráka. Hóskar til grillaðar kjøtrættir, villini djór og búnan ost."},
+ {id:"01-101427",im:3546,n:"Amethyst Rouge",c:"FR",t:"Natúrvín",k:"red",b:1,s:"turt",a:14,v:"0,75 l",p:196.5,pr:[],dv:["svinakjot","lambskjot"],r:4.0,vo:8,no:"Natúrvín. 100% Grenache Noir. Bleytt, lætt og fruktkent vín ið angar av kirsiberum og blommum. Hóskar til svína- og lambskjøt."},
+ {id:"01-101495",im:3466,n:"Belleroche Merlot 150 cl",c:"FR",t:"Reyðvín",k:"red",b:2,s:"turt",a:13,v:"1,50 l",p:165,pr:[],dv:["neytakjot","ostur"],r:3.9,vo:33,no:"Angar av reyðum berum. Bleytur, rundur og elegantur. Hóskar til neytakjøt, grillaðan mat og ostaborð."},
+ {id:"01-301226",im:2981,n:"Beronia Crianza Rioja 37,5 cl",c:"ES",t:"Reyðvín",k:"red",b:3,s:"turt",a:13.5,v:"0,38 l",p:65,pr:["lambskjot","neytakjot"],dv:[],r:4.1,vo:29,no:"Angar av timian, rosmarin, kirsuberum og bláberum. Kraftmikil við langan eftirsmakk. Hóskar til lambskjøt, grillað kjøt og tapas."},
+ {id:"01-301220",im:3453,n:"Beronia Gran Reserva Rioja",c:"ES",t:"Reyðvín",k:"red",b:3,s:"turt",a:14,v:"0,75 l",p:175,pr:["neytakjot","ostur"],dv:[],r:4.5,vo:24,no:"Angi av søtligari frukt, kanel og tubbaki. Búgvin frukt, eik og søtlig krydd. Góð fylla. Hóskar til neytakjøt og ost."},
+ {id:"01-301222",im:1142,n:"Beronia Reserva Rioja",c:"ES",t:"Reyðvín",k:"red",b:3,s:"turt",a:14,v:"0,75 l",p:141.5,pr:["lambskjot","neytakjot"],dv:[],r:4.3,vo:47,no:"Angi av myrkum berum og søtligum kryddi, kanel og vanilju. Góð fylla. Hóskar til lambskjøt og neytakjøt."},
+ {id:"04-010512",im:3700,n:"Bestheim Cremant d'Alsace Brut",c:"FR",t:"Brúsandi vín",k:"sparkling",b:1,s:"turt",a:12.5,v:"0,75 l",p:171.5,pr:[],dv:["skeljadjor","fordrykkir"],r:4.1,vo:13,no:"Lættur og frískligur smakkur. Hóskar til skeljadjór ella til vælkomst."},
+ {id:"02-203230",im:2737,n:"Blue Nun Authentic White",c:"DE",t:"Hvítvín",k:"white",b:1,s:"halvturt",a:9.5,v:"0,75 l",p:88,pr:["fiskur","fordrykkir","skeljadjor"],dv:[],r:3.5,vo:62,no:"Frískligur fruktangi. Hálvturt og frískt við góðari javnvág millum søtleika, frukt og sýru. Hóskar til fisk og skeljadjór ella at drekka bert."},
+ {id:"04-000130",im:2332,n:"Bollinger Special Cuvée",c:"FR",t:"Champagne",k:"sparkling",b:2,s:"turt",a:12,v:"0,75 l",p:482.5,pr:["fiskur","flogfenadur","fordrykkir","skeljadjor","svinakjot"],dv:[],r:4.7,vo:21,no:"Silkibleytar bobblur. Angi av súreplum. Smakkurin er leskiligur við perum og valnøtum. Hóskar til fordrykk, fisk, sushi, hummara og hvítt kjøt."},
+ {id:"01-004030",im:3072,n:"Bon Remede Signature Ventoux",c:"FR",t:"Reyðvín",k:"red",b:3,s:"turt",a:13.5,v:"0,75 l",p:118,pr:["flogfenadur","neytakjot","svinakjot"],dv:[],r:4.0,vo:19,no:"Angar av lakrisi og myrkari frukt. Fruktkent, runt og kraftmikið. Hóskar til flogfenað, svínakjøt og neytakjøt."},
+ {id:"02-002019",im:2851,n:"Bóndin – Rótabryggj 2025",c:"FO",t:"Frukt- og rótarvín",k:"other",b:2,s:"halvturt",a:14.5,v:"0,75 l",p:243,pr:["fordrykkir"],dv:[],r:4.2,vo:11,no:"Føroyskt. Gjørt úr úrvaldari mairót úr Dímun, búnað í eik. Vaniljusmakkur við nakað av súrleika. Hóskar sum fordrykkur og til alt á bóndans borði."},
+ {id:"01-400610",im:1652,n:"Bontadini Toscana Rosso IGT",c:"IT",t:"Reyðvín",k:"red",b:2,s:"turt",a:14,v:"0,75 l",p:86,pr:["lambskjot","neytakjot","ostur"],dv:[],r:3.8,vo:31,no:"Angar av reyðum berum. Miðal fylla við góðum fruktsmakki og nakað av eik. Egnar til pastarættir og ikki ov kryddað kjøt."},
+ {id:"02-400330",im:4128,n:"Borgo Al Pascolo Chardonnay",c:"IT",t:"Hvítvín",k:"white",b:2,s:"turt",a:12,v:"0,75 l",p:92.5,pr:[],dv:["fiskur","ostur"],r:3.9,vo:22,no:"Angar av perum, súreplum og vanilju. Mildur, kremutur og frískur við miðal fyllu. Hóskar til ljósan og feitan fisk, ljóst kjøt og fastar ostar."},
+ {id:"04-100075",im:4025,n:"Bottega Lemon Spritz",c:"IT",t:"Brúsandi blanding",k:"sparkling",b:1,s:"halvturt",a:5.5,v:"0,75 l",p:123,pr:[],dv:["fordrykkir"],r:3.7,vo:26,no:"Limoncino likørur og brúsandi vín, liðugtblandað. Borðeiðast við sitrón og ísi."},
+ {id:"02-123013",im:3713,n:"Bourgogne Blanc Hautes Cotes de Beaune",c:"FR",t:"Hvítvín",k:"white",b:2,s:"turt",a:13,v:"0,75 l",p:199,pr:[],dv:["fiskur","flogfenadur"],r:4.3,vo:10,no:"Angar av blómum og grønari melón. Turrur og frískligur við góðari sýru og mineralitet. Hóskar til flestu fiskarættir, høsnarunga og salat."},
+ {id:"02-123010",im:4177,n:"Bourgogne Chardonnay Les Genévrieres",c:"FR",t:"Hvítvín",k:"white",b:2,s:"turt",a:12,v:"0,75 l",p:165,pr:["fiskur","skeljadjor"],dv:[],r:4.2,vo:14,no:"Angar av hunangi, vanilju, súreplum og smøri. Rundur og fruktkendur. Hóskar til skeljadjór, fiskarættir ella pasta við kremutari sós."},
+ {id:"01-121630",im:1648,n:"Bourgogne Pinot Noir Dracy",c:"FR",t:"Reyðvín",k:"red",b:2,s:"turt",a:13,v:"0,75 l",p:214,pr:["flogfenadur","kalvakjot","lambskjot","svinakjot","villinidjor"],dv:[],r:4.4,vo:18,no:"Angar av frískari frukt. Bleytur og í góðari javnvág. Hóskar væl til lættar kjøtrættir."},
+ {id:"01-121639",im:4176,n:"Bourgogne Pinot Noir Les Genévrieres",c:"FR",t:"Reyðvín",k:"red",b:2,s:"turt",a:13.5,v:"0,75 l",p:165,pr:[],dv:["flogfenadur","lambskjot"],r:4.3,vo:9,no:"Angar av kirsuberum, hindberum og jarðberum. Lættur og bleytur við mjúkum tanninum. Hóskar til ljósan flogfenað, lambskjøt og tapas."},
+ {id:"01-121640",im:2031,n:"Bourgogne Pinot Noir Terres de Familie",c:"FR",t:"Reyðvín",k:"red",b:2,s:"turt",a:12.5,v:"0,75 l",p:270.5,pr:["flogfenadur","kalvakjot","lambskjot"],dv:[],r:4.4,vo:7,no:"Angar av frískum hindberum, jarðberum og kirsiberum. Leskiligur og fruktríkur. Hóskar til lamb, dunnu, høsnakjøt og kálvakjøt."},
+ {id:"01-400711",im:3852,n:"Brachetto d'Acqui Braida",c:"IT",t:"Brúsandi reyðvín",k:"sparkling",b:1,s:"sott",a:5.5,v:"0,75 l",p:155,pr:["dessertir"],dv:[],r:4.1,vo:17,no:"Leskiligt søtt reytt vín við mildum brúsi. Hóskar til dessertir, serliga berja- og sjokolátadessertir."},
+ {id:"01-111114",im:2306,n:"Luksus Julegløgg 10%",c:"FR",t:"Heitvín / gløgg",k:"sweet",b:2,s:"sott",a:10,v:"0,75 l",p:68,pr:[],dv:[],r:3.6,vo:40,no:"Liðugtblandað gløgg. Bert eftir at koyra gløggbland í."},
+ {id:"01-400317",im:4006,n:"Luna Argenta Appassite",c:"IT",t:"Reyðvín",k:"red",b:3,s:"halvturt",a:14,v:"0,75 l",p:103,pr:["kalvakjot","lambskjot","neytakjot"],dv:[],r:4.2,vo:36,no:"Angar av sviskum, bromberum og kirsiberum við sindur av kryddi. Hóskar til miðal kryddaðar kjøtrættir, lambs-, neyta- og kálvakjøt, dunnu og gás."},
+ {id:"01-604210",im:3275,n:"Lux Zinfandel",c:"US",t:"Reyðvín",k:"red",b:3,s:"halvturt",a:15,v:"0,75 l",p:111,pr:["flogfenadur","neytakjot","ostur","svinakjot","villinidjor"],dv:[],r:4.3,vo:58,no:"Saftmikil, silkibleyt og rund. Ber brá av reyðum berum við søtligum undirtóna. Hóskar til grill/barbecue, oksakjøt, tapas og myrkan fugl."},
+ {id:"01-301230",im:2733,n:"LZ Rioja Øko, Telmo Rodriguez",c:"ES",t:"Reyðvín",k:"red",b:2,s:"turt",a:14,v:"0,75 l",p:136.5,pr:["lambskjot","neytakjot","svinakjot"],dv:[],r:4.3,vo:21,no:"Angar av sólberi og hindberi og eitt vet av ljósari sjokolátu. Bleytur og fruktmikil. Hóskar til oksa-, lamba- og svínakjøt."},
+ {id:"01-137021",im:3827,n:"M. Chapoutier Banyuls 50 cl",c:"FR",t:"Dessertvín",k:"sweet",b:3,s:"sott",a:16,v:"0,50 l",p:162,pr:["dessertir","ostur"],dv:[],r:4.5,vo:13,no:"Kraftmikið reytt dessertvín. Hóskar til sjokolátu, dessert og blámuost."},
+ {id:"02-121791",im:4175,n:"Maceration CF Orange",c:"FR",t:"Orangevín",k:"orange",b:2,s:"turt",a:13,v:"0,75 l",p:217,pr:["flogfenadur","ostur","svinakjot"],dv:[],r:4.1,vo:12,no:"Angar av appelsinskali, hunangi og turkaðari aprikos. Miðal kraftmikil, turrur og fruktkendur. Hóskar til ræst, vegetarrættir, høsnarunga, svínakjøt og asiatiskar rættir."},
+ {id:"01-908490",im:212,n:"Makana Cabernet Organic",c:"ZA",t:"Reyðvín",k:"red",b:2,s:"turt",a:13,v:"0,75 l",p:89,pr:["kalvakjot","neytakjot","ostur","villinidjor"],dv:[],r:4.0,vo:38,no:"Vistfrøðiligt vín. Angar av frískari frukt og sindur av kryddi. Fruktríkur við tónum av reyðum berum. Hóskar til grillaðar kjøtrættir og ymiskar ostar."},
+ {id:"01-111123",im:4113,n:"Mariensgold Gluhwein 300 cl",c:"DE",t:"Heitvín / gløgg",k:"sweet",b:2,s:"sott",a:10,v:"3,00 l",p:252,pr:[],dv:[],r:3.7,vo:19,no:"Liðugtblandað. Merktur av piparkøkum, nelikku og kardamummu. Bert at lata gløggbland í."},
+ {id:"01-304692",im:3492,n:"Marques de Riscal Reserva XR",c:"ES",t:"Reyðvín",k:"red",b:3,s:"turt",a:15,v:"0,75 l",p:250,pr:[],dv:["neytakjot"],r:4.4,vo:16,no:"Djúpur reyður litur, royktur og kryddaður angi við farra av lakrisi. Mjúkur við eik, myrkari frukt, bláber og sólber."},
+ {id:"01-304689",im:69,n:"Marques de Riscal Reserve",c:"ES",t:"Reyðvín",k:"red",b:3,s:"turt",a:14.5,v:"0,75 l",p:167.5,pr:["lambskjot","neytakjot","villinidjor"],dv:[],r:4.4,vo:53,no:"Frískur, fruktríkur og kraftmikil angi. Bleytur berjasmakkur við krydd, lakris, kaffi og vanilju. Heitur og langur ráki. Hóskar til lambskjøt, villini djór og oksasteik."},
+ {id:"04-801000",im:1847,n:"Martini Asti Spumante 75 cl",c:"IT",t:"Brúsandi vín",k:"sparkling",b:1,s:"sott",a:7.5,v:"0,75 l",p:133,pr:["dessertir","fordrykkir"],dv:[],r:4.0,vo:44,no:"Smakkur av frískum drúvum og fruktkendur angi. Frískt á ein søtan hátt. Hóskar væl sum fordrykkur, omaná og til frukt."},
+ {id:"01-403220",im:106,n:"Marziano Abbona Barbaresco",c:"IT",t:"Reyðvín",k:"red",b:3,s:"turt",a:14.5,v:"0,75 l",p:318,pr:["kalvakjot","lambskjot","neytakjot","villinidjor"],dv:[],r:4.5,vo:14,no:"Kryddaður angi við nakað av frukt. Rundur, fruktkendur og kryddaður. Hóskar til flestar kryddaðar kjøtrættir."},
+ {id:"01-101208",im:3881,n:"Mas Lasta Languedoc",c:"FR",t:"Natúrvín",k:"red",b:2,s:"turt",a:13.5,v:"0,75 l",p:200.5,pr:[],dv:[],r:4.0,vo:8,no:"Natúrvín. Angar av sólberum, blommum og kryddurtum. Bleytur og fruktkendur. Hóskar til lættar rættir og til at drekka bert."},
+ {id:"01-400410",im:2412,n:"Masi Organic Bellovile Toscana",c:"IT",t:"Reyðvín",k:"red",b:2,s:"turt",a:13,v:"0,75 l",p:140.5,pr:["lambskjot","neytakjot","svinakjot"],dv:[],r:4.1,vo:27,no:"Vistfrøðiligt vín. Fruktríkt og runt við sermerki av eikitræi, blommum og myrkum kirsuberum. Hóskar til lamba-, neyta- og svínakjøt."},
+ {id:"04-400451",im:3889,n:"Masottina Prosecco Brut",c:"IT",t:"Brúsandi vín",k:"sparkling",b:1,s:"turt",a:11,v:"0,75 l",p:115,pr:[],dv:["fordrykkir"],r:4.0,vo:35,no:"Angar av hvítum blómum, grønum súreplum og honningmelón. Lættur og turrur við bleytum brúsi. Hóskar til drinks, fordrykk og lættar rættir."},
+ {id:"01-703370",im:4069,n:"Tiempo Red 300 cl",c:"PT",t:"Reyðvín",k:"red",b:1,s:"turt",a:11.5,v:"3,00 l",p:242,pr:[],dv:["flogfenadur","neytakjot"],r:3.6,vo:29,no:"Lætt, fruktkent og bleytt vín. Hóskar til høsnarunga, neytakjøt, turkaða skinku og at drekka bert."},
+ {id:"02-703370",im:4070,n:"Tiempo White 300 cl",c:"PT",t:"Hvítvín",k:"white",b:1,s:"turt",a:11.5,v:"3,00 l",p:242,pr:[],dv:["flogfenadur","fiskur","skeljadjor"],r:3.5,vo:24,no:"Lætt og frískligt vín. Hóskar til høsnarunga, fisk, skeljadjór ella at drekka bert."},
+ {id:"02-805120",im:1715,n:"Tokaji Aszú 5 puttonyos Disznó",c:"HU",t:"Dessertvín",k:"sweet",b:2,s:"sott",a:12.5,v:"0,50 l",p:273,pr:["dessertir","ostur"],dv:[],r:4.6,vo:18,no:"Søtt hvítvín við fruktkendum anga. Miðal fylla og góð javnvág millum sýru og frukt. Hóskar til dessertir og ostar."},
+ {id:"01-402235",im:3095,n:"Tommasi Valpolicella Ripasso",c:"IT",t:"Reyðvín",k:"red",b:3,s:"turt",a:13.5,v:"0,75 l",p:183.5,pr:[],dv:["lambskjot","neytakjot"],r:4.4,vo:41,no:"Angar av búnum berum. Kraftigur og bleytur við blommum, rosinum og kirsuberum. Hóskar til lambskjøt, neytakjøt, dunnu og gás."},
+ {id:"01-402242",im:4134,n:"Tommasi Valpolicella Ripasso 150 cl",c:"IT",t:"Reyðvín",k:"red",b:3,s:"turt",a:13.5,v:"1,50 l",p:401.5,pr:[],dv:["neytakjot"],r:4.3,vo:12,no:"Angar av kirsiberum, mandlum og turkaðari frukt. Kraftmikil og heitur. Hóskar til dunnu, gás, fleskasteik og reytt kjøt við blásoppaostasós."},
+ {id:"01-405322",im:3780,n:"Tor Del Colle Montepulciano Riserva",c:"IT",t:"Reyðvín",k:"red",b:3,s:"turt",a:13.5,v:"0,75 l",p:116.5,pr:["flogfenadur","neytakjot","villinidjor"],dv:[],r:4.0,vo:33,no:"Angar av kirsiberum, bláberum, ribs og kaffi. Fruktkendur og rúgvumikil. Hóskar til dunnu, gás, pasta, pitsu, grillaðan mat og barbecue."},
+ {id:"01-300116",im:1566,n:"Torres Celeste Crianza Ribera del Duero",c:"ES",t:"Reyðvín",k:"red",b:2,s:"turt",a:14,v:"0,75 l",p:170,pr:["neytakjot","villinidjor"],dv:[],r:4.2,vo:26,no:"Angar av myrkum berum, kaffi og eik. Fruktkent við góðari sýru. Hóskar til grillað reytt kjøt, lambskjøt og villini djór."},
+ {id:"01-300100",im:1666,n:"Torres Coronas",c:"ES",t:"Reyðvín",k:"red",b:2,s:"turt",a:13.5,v:"0,75 l",p:108.5,pr:["flogfenadur","kalvakjot","neytakjot","ostur"],dv:[],r:4.1,vo:64,no:"Turt við góðari fyllu og frískum berjaanga við sindur av kryddi. Hóskar til kálvakjøt, neytakjøt, flogfenað og ymiskar ostar."},
+ {id:"01-300105",im:1607,n:"Torres Coronas 37,5 cl",c:"ES",t:"Reyðvín",k:"red",b:2,s:"turt",a:13.5,v:"0,38 l",p:61,pr:["flogfenadur","kalvakjot","neytakjot","ostur"],dv:[],r:4.0,vo:30,no:"Turt við góðari fyllu og frískum, fruktkendum berjaanga. Hóskar til kálvakjøt, neytakjøt, flogfenað og ymiskar ostar."},
+ {id:"01-300110",im:2212,n:"Torres Gran Coronas Cab. Res.",c:"ES",t:"Reyðvín",k:"red",b:3,s:"turt",a:14,v:"0,75 l",p:142.5,pr:["flogfenadur","lambskjot","neytakjot","ostur","villinidjor"],dv:[],r:4.4,vo:48,no:"Angar av búnaðari frukt. Turt við bleytum fruktsmakki og ferli av krydd og eik. Hóskar til neytakjøt, lambskjøt, flogfenað, villini djór og búnan ost."},
+ {id:"01-300118",im:1589,n:"Torres Mas La Plana",c:"ES",t:"Reyðvín",k:"red",b:3,s:"turt",a:14.5,v:"0,75 l",p:512,pr:["neytakjot","villinidjor"],dv:[],r:4.7,vo:19,no:"Myrkt og kraftmikið vín við góðari sýru. Hóskar til kryddaðar rættir og villini djór."},
+ {id:"02-304384",im:291,n:"Torres Moscatel Oro 50 cl",c:"ES",t:"Dessertvín",k:"sweet",b:2,s:"sott",a:15,v:"0,50 l",p:113,pr:["dessertir","ostur"],dv:[],r:4.2,vo:23,no:"Søtt hvítvín ið angar av turkaðum tropiskum fruktum. Fruktríkur. Hóskar saman við hálvsøtum dessertum."},
+ {id:"01-300119",im:3444,n:"Torres Natureo Red Syrah",c:"ES",t:"Alkoholfrítt reyðvín",k:"red",b:2,s:"turt",a:0,v:"0,75 l",p:73.5,pr:["flogfenadur","kalvakjot","lambskjot","ostur","svinakjot"],dv:[],af:1,r:3.6,vo:21,no:"Alkoholfrítt. Fruktkent við mildari sýru og góðari fyllu. Hóskar til ljóst kjøt, mildan ost og ljósan flogfenað."},
+ {id:"02-304381",im:3445,n:"Torres Natureo White Muscat",c:"ES",t:"Alkoholfrítt hvítvín",k:"white",b:1,s:"halvturt",a:0,v:"0,75 l",p:64,pr:["fiskur","fordrykkir","skeljadjor"],dv:[],af:1,r:3.5,vo:28,no:"Alkoholfrítt. Fruktkent við góðari fyllu og lættum søtleika. Hóskar til fisk, skeljadjór ella sum fordrykkur."},
+ {id:"01-300117",im:1567,n:"Torres Salmos Red Priorat",c:"ES",t:"Reyðvín",k:"red",b:3,s:"turt",a:14,v:"0,75 l",p:231,pr:["lambskjot","neytakjot","villinidjor"],dv:[],r:4.5,vo:17,no:"Búgvið vín ið angar av sviskum og búnum kirsuberum við dámligum vaniljusmakki. Hóskar til villini djór og reytt kjøt."},
+ {id:"02-304387",im:3896,n:"Torres San Valentin White",c:"ES",t:"Hvítvín",k:"white",b:1,s:"halvturt",a:11,v:"0,75 l",p:94.5,pr:["dessertir","fiskur","fordrykkir","ostur","skeljadjor"],dv:[],r:3.9,vo:36,no:"Angar av frískum drúvum, banan og blómum. Frískur, fruktkendur smakkur við søtleika. Hóskar til ljóst kjøt, fisk og at drekka bert."},
+ {id:"02-304388",im:3446,n:"Torres San Valentin White 300 cl",c:"ES",t:"Hvítvín",k:"white",b:1,s:"halvturt",a:11,v:"3,00 l",p:305,pr:["dessertir","fiskur","fordrykkir","ostur","skeljadjor"],dv:[],r:3.8,vo:22,no:"Angar av frískum drúvum, banønum og blómum. Frískur og fruktkendur við søtleika. Hóskar til ljóst kjøt, fisk og at drekka bert."}
+];
+
+/* flavour tags lisin úr lýsingini (okkara enrichment) */
+const FLAV=[[/sól ?ber|blá ?ber|kirsu?ber|hind ?ber|jarð ?ber|trana ?ber|berum|berjasmakk|reyðum ber/i,"Ber"],
+ [/eik/i,"Eik"],[/vanilj/i,"Vanilja"],[/krydd/i,"Krydd"],[/sitrus|súrepl|sitrón|grape|melón/i,"Sitrus"],
+ [/hunang/i,"Hunang"],[/blóm/i,"Blómut"],[/royk/i,"Royktur"],[/sýr[au]|frísklig|frískur/i,"Frísk sýra"],
+ [/mineralsk/i,"Mineralskt"],[/sjokolát|kaffi|lakris/i,"Kaffi · sjokoláta"]];
+function flav(no){const o=[];for(const[re,t]of FLAV){if(re.test(no)){o.push(t);if(o.length===3)break;}}return o;}
+
+/* ===================== QUIZ CONFIG ===================== */
+const Q=[
+ {key:"slag",title:"Hvat slag av víni?",sub:"Vel tað, tú hugsar um — ella lat okkum velja.",grid:true,
+  opts:[{v:"red",l:"Reyðvín",color:"#7b1f2b"},{v:"white",l:"Hvítvín",color:"#e4cf7a"},
+        {v:"sparkling",l:"Brúsandi",color:"#d8b24a"},{v:"sweet",l:"Søtt & dessert",color:"#b5651d"},
+        {v:"orange",l:"Orange & natúr",color:"#d97b29"},{v:"any",l:"Vís mær alt",color:"any"}]},
+ {key:"matur",title:"Hvat skal á borðið?",sub:"Vit nýta Rúsans egnu matmerki at finna samsvar.",grid:true,emoji:true,
+  opts:[{v:"neytakjot"},{v:"lambskjot"},{v:"svinakjot"},{v:"flogfenadur"},{v:"villinidjor"},
+        {v:"fiskur"},{v:"skeljadjor"},{v:"ostur"},{v:"dessertir"},{v:"fordrykkir"},
+        {v:"kalvakjot"},{v:"none",l:"Bara at drekka",glyph:"🍷"}]},
+ {key:"fylla",title:"Hvussu kraftigt?",sub:"Frá lættum og frísku til kraftmikið og fylt.",
+  opts:[{v:1,l:"Lætt",d:"Mjúkt og leskiligt",bars:1},{v:2,l:"Miðal",d:"Væl javnvigað",bars:2},
+        {v:3,l:"Kraftigt",d:"Fylt og intenst",bars:3},{v:"any",l:"Sama mær",d:"Eingin fyrimunur"}]},
+ {key:"sott",title:"Turt ella søtt?",sub:"",
+  opts:[{v:"turt",l:"Turt",d:"Lítil ella eingin søtleiki"},{v:"halvturt",l:"Hálvturt",d:"Eitt sindur av søtleika"},
+        {v:"sott",l:"Søtt",d:"Greiður søtleiki"},{v:"any",l:"Sama mær",d:"Eingin fyrimunur"}]},
+ {key:"pris",title:"Hvat má tað kosta?",sub:"Prísur við MVG, fyri eina fløsku.",
+  opts:[{v:"a",l:"Undir 100 kr",d:"Hvørsdagsvín",lo:0,hi:100},{v:"b",l:"100–200 kr",d:"Miðallag",lo:100,hi:200},
+        {v:"c",l:"Yvir 200 kr",d:"Til serlig høvi",lo:200,hi:99999},{v:"any",l:"Sama mær",d:"Eingin mark"}]}
+];
+
+let step=0; // 0=intro, 1..5 = Q index+1, 6=results
+const A={slag:null,matur:null,fylla:null,sott:null,pris:null};
+const main=document.getElementById('main'),nav=document.getElementById('nav'),dock=document.getElementById('dock'),
+ prog=document.getElementById('prog'),navlbl=document.getElementById('navlbl'),back=document.getElementById('back');
+
+back.onclick=()=>{ if(step>0){step--; render();} };
+
+function render(){
+  // nav + progress
+  if(step>=1 && step<=Q.length){
+    nav.classList.remove('hidden');
+    prog.innerHTML=Q.map((_,i)=>`<div class="seg ${i<step-1?'done':''} ${i===step-1?'active':''}"><span class="fill"></span></div>`).join('');
+    navlbl.textContent=step+" / "+Q.length;
+  } else nav.classList.add('hidden');
+
+  if(step===0) renderIntro();
+  else if(step<=Q.length) renderQ(step-1);
+  else renderResults();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function renderIntro(){
+  dock.className='dock show';
+  dock.innerHTML=`<button class="btn primary" onclick="next()">Byrja</button>`;
+  main.innerHTML=`<section class="screen">
+    <div class="hero-mark">🍷</div>
+    <div class="eyebrow">Rúsan · prototýpa</div>
+    <h1>Vínleiðarin</h1>
+    <p class="sub">Svara nøkrum spurningum um mat og smakk. So finna vit vínini úr Rúsans skrá, ið hóska best.</p>
+    <div class="stats">
+      <div class="stat"><b>${W.length}</b><span>verulig vín</span></div>
+      <div class="stat"><b>${Object.keys(C).length}</b><span>lond</span></div>
+      <div class="stat"><b>5</b><span>spurningar</span></div>
+    </div>
+  </section>`;
+}
+
+function renderQ(i){
+  const q=Q[i], cur=A[q.key];
+  let body;
+  if(q.grid){
+    body=`<div class="grid">`+q.opts.map(o=>{
+      const lab=o.l||FOOD[o.v][1];
+      const gl=q.emoji?`<div class="glyph">${o.glyph||FOOD[o.v][0]}</div>`
+        :(o.color==="any"?`<div class="dot" style="background:conic-gradient(from 0deg,#7b1f2b,#e4cf7a,#d97b29,#7b1f2b)"></div>`
+          :`<div class="dot" style="background:${o.color}"></div>`);
+      return `<button class="tile ${cur===o.v?'on':''}" onclick="pick('${q.key}','${o.v}')">
+        <span class="check">✓</span>${gl}<span class="tlabel">${lab}</span></button>`;
+    }).join('')+`</div>`;
+  } else {
+    body=`<div class="list">`+q.opts.map(o=>{
+      const bars=o.bars?`<span class="bars">${[8,13,18].slice(0,3).map((h,bi)=>`<i style="height:${bi<o.bars?h:6}px;opacity:${bi<o.bars?1:.4}"></i>`).join('')}</span>`:'';
+      return `<div class="row ${cur===String(o.v)||cur===o.v?'on':''}" onclick="pick('${q.key}','${o.v}')">
+        ${bars}<div><div class="rlabel">${o.l}</div>${o.d?`<div class="rdesc">${o.d}</div>`:''}</div>
+        <span class="tick"></span></div>`;
+    }).join('')+`</div>`;
+  }
+  main.innerHTML=`<section class="screen">
+    <div class="eyebrow">Spurningur ${i+1}</div>
+    <h1>${q.title}</h1>${q.sub?`<p class="sub">${q.sub}</p>`:''}${body}</section>`;
+  dock.className='dock'+(cur!=null?' show':'');
+  dock.innerHTML= i===Q.length-1
+    ? `<button class="btn primary" ${cur==null?'disabled':''} onclick="next()">Vís úrslitini</button>`
+    : `<button class="btn glass" ${cur==null?'disabled':''} onclick="next()">Hald fram</button>`;
+}
+
+function pick(key,val){
+  A[key]= (val==='1'||val==='2'||val==='3')? val : val;
+  render();
+  // auto-advance on select (snappy quiz feel)
+  clearTimeout(window._adv);
+  window._adv=setTimeout(()=>{ if(step>=1&&step<=Q.length) next(); }, 260);
+}
+function next(){ step++; render(); }
+
+/* ===================== MATCHING ===================== */
+function priceRange(){const o=Q[4].opts.find(o=>o.v===A.pris);return o&&o.lo!=null?[o.lo,o.hi]:null;}
+function passType(w){
+  if(!A.slag||A.slag==='any') return true;
+  if(A.slag==='sweet') return w.k==='sweet'||w.s==='sott';
+  return w.k===A.slag;
+}
+function adj(a,b){const o=['turt','halvturt','sott'];return Math.abs(o.indexOf(a)-o.indexOf(b))===1;}
+
+function scoreWine(w){
+  let s=0,max=0;const reasons=[];
+  if(A.matur&&A.matur!=='none'){
+    max+=50;
+    if(w.pr.includes(A.matur)){s+=50;reasons.push({t:"Hóskar til "+FOOD[A.matur][1],ic:FOOD[A.matur][0]});}
+    else if(w.dv.includes(A.matur)){s+=32;reasons.push({t:"Nevnt til "+FOOD[A.matur][1]+" í lýsing",ic:FOOD[A.matur][0],soft:1});}
+  }
+  if(A.fylla&&A.fylla!=='any'){const pf=+A.fylla;max+=18;const d=Math.abs(w.b-pf);
+    if(d===0){s+=18;reasons.push({t:BODY[pf]+" fylla",soft:1});}else if(d===1)s+=9;}
+  if(A.sott&&A.sott!=='any'){max+=18;
+    if(w.s===A.sott){s+=18;reasons.push({t:SWEET[A.sott],soft:1});}else if(adj(w.s,A.sott))s+=6;}
+  max+=10; s+=(w.r/5)*10;
+  const pct=max>0?Math.round(s/max*100):Math.round(w.r/5*100);
+  return {pct:Math.min(99,pct),raw:s,reasons};
+}
+
+function renderResults(){
+  dock.className='dock';dock.innerHTML='';
+  const pr=priceRange();
+  let list=W.filter(w=>passType(w)&&(!pr||(w.p>=pr[0]&&w.p<pr[1])))
+            .map(w=>({w,...scoreWine(w)}))
+            .sort((a,b)=>b.raw-a.raw);
+  const head=`<section class="screen">
+    <div class="eyebrow">Tínar samsvaringar</div>
+    <h1>${list.length?(A.matur&&A.matur!=='none'?'Best til '+FOOD[A.matur][1]:'Mælt til tín'):'Eingin púra samsvar'}</h1>`;
+  if(!list.length){
+    main.innerHTML=head+`<div class="empty"><div class="e-ic">🍇</div>
+      <p>Ongin vín svaraðu til øll vølini. Royn eitt breiðari úrval.</p></div>
+      </section>`;
+    dock.className='dock show';
+    dock.innerHTML=`<button class="btn primary" onclick="restart()">Byrja av nýggjum</button>`;
+    return;
+  }
+  const cards=list.slice(0,12).map((m,idx)=>{
+    const w=m.w, ct=C[w.c];
+    const tags=[`<span class="t">${w.t}</span>`,`<span class="t">${BODY[w.b]}</span>`,`<span class="t">${SWEET[w.s]}</span>`]
+      .concat(w.af?[`<span class="t af">Alkoholfrítt</span>`]:[])
+      .concat(flav(w.no).map(f=>`<span class="t">${f}</span>`)).join('');
+    const reasons=m.reasons.map(r=>`<span class="reason ${r.soft?'soft':''}">${r.ic?r.ic+' ':''}${r.t}</span>`).join('');
+    const full=Math.round(w.r);const stars='★'.repeat(full)+'☆'.repeat(5-full);
+    return `<article class="wine ${idx===0?'top':''}">
+      ${idx===0?'<div class="topbadge">Tín besta samsvaring</div>':''}
+      <div class="wtop" ${idx===0?'style="margin-top:18px"':''}>
+        <div class="bottle"><img loading="lazy" src="https://rusan.fo/Images/Items/W50/${w.im}.jpg" alt="" onerror="this.parentNode.style.display='none'"></div>
+        <div class="whead">
+          <div class="match"><span class="pct">${m.pct}% samsvar</span>
+            <span class="meter"><i style="width:${m.pct}%"></i></span></div>
+          <a class="wname" href="https://rusan.fo/ShopItem/VIN/0/${w.id}/STK" target="_blank" rel="noopener">${w.n}</a>
+          <div class="worigin">${ct[0]} ${ct[1]} · ${w.a}% · ${w.v}</div>
+        </div>
+      </div>
+      ${reasons?`<div class="reasons">${reasons}</div>`:''}
+      <div class="wtags">${tags}</div>
+      <p class="wnotes">${w.no}</p>
+      <div class="wfoot">
+        <div><div class="wprice">${w.p.toLocaleString('da-DK',{minimumFractionDigits:2})} <s>kr</s></div>
+          <div class="rating"><span class="stars">${stars}</span> ${w.r.toFixed(1)} · ${w.vo} metingar</div></div>
+        <a class="wlink" href="https://rusan.fo/ShopItem/VIN/0/${w.id}/STK" target="_blank" rel="noopener">Hjá Rúsan ›</a>
+      </div>
+    </article>`;
+  }).join('');
+  main.innerHTML=head+`<div class="rcount">${list.length} vín svara til tíni vøl — víst eftir samsvari</div>
+    ${cards}
+    <div class="info">
+      <b>Hvussu hetta riggar.</b><br>
+      <span class="lg" style="background:#a4243b"></span><b>Rúsans dátur:</b> navn, mynd, prísur, styrki, land, lýsing og matmerki — ${W.length} verulig vín tikin frá rusan.fo (royndarúrtak av skránni).<br>
+      <span class="lg" style="background:#c8a24a"></span><b>Okkara profilur (demo):</b> slag, fylla, søtleiki og smakkmerki, loyst úr lýsingunum.<br>
+      <span class="lg" style="background:#6b6b70"></span><b>Metingar (demo):</b> har tínar login-leysu metingar fóðra inn.
+    </div>
+    </section>`;
+  dock.className='dock show';
+  dock.innerHTML=`<button class="btn glass" onclick="restart()">Royn av nýggjum</button>`;
+}
+
+function restart(){step=0;A.slag=A.matur=A.fylla=A.sott=A.pris=null;render();}
+
+render();
+</script>
+</body>
+</html>
