@@ -242,7 +242,7 @@ const FOOD={fiskur:["🐟","Fiskur"],skeljadjor:["🦐","Skeljadjór"],flogfenad
  neytakjot:["🥩","Neytakjøt"],kalvakjot:["🍖","Kalvakjøt"],lambskjot:["🐑","Lambskjøt"],
  svinakjot:["🐖","Svínakjøt"],villinidjor:["🦌","Villinidjór"],ostur:["🧀","Ostur"],
  dessertir:["🍰","Dessertir"],fordrykkir:["🥂","Fordrykkir"]};
-const BODY={1:"Lætt",2:"Miðal",3:"Kraftigt"};
+const BODY={1:"Lætt",2:"Miðal",3:"Kraftmikið"};
 const SWEET={turt:"Turt",halvturt:"Hálvturt",sott:"Søtt"};
 const SLAG={red:"Reyðvín",white:"Hvítvín",sparkling:"Brúsandi",sweet:"Søtt vín",orange:"Orangevín"};
 
@@ -269,37 +269,37 @@ function flav3(no){return flavAll(no).slice(0,3);}
 
 /* ============================================================ QUIZ ============ */
 const Q=[
- {key:"roynd",title:"Hvussu ævintýrslig(ur) ert tú?",sub:"Skalt tú hava trygg, kend vín ella heldur nýhugsandi og óvanlig?",
-  help:"«Helst trygt» gevur væl umtókt, klassiskt vín. «Ævintýrsligur» lyftir orange, natúr og smærri funnin vín fram.",skip:"any",
-  opts:[{v:"trygg",l:"Helst trygt",d:"Kend og væl umtókt vín"},{v:"midal",l:"Eitt sindur forvitin",d:"Opin fyri nýtt"},
-        {v:"aevintyr",l:"Ævintýrsligur",d:"Vís mær tað óvanliga"}]},
+ {key:"roynd",title:"Hvussu ævintýrslig/ur ert tú?",sub:"Vilt tú hava trygg og kend vín ella heldur nýhugsandi og óvanlig vín?",
+  help:"«Helst trygt» gevur tær væl umtókt, klassiskt vín. «Ævintýrsligur» lyftir orangevín, natúrvín og smærri kend vín fram.",skip:"any",
+  opts:[{v:"trygg",l:"Helst trygt",d:"Kend og væl umtókt vín"},{v:"midal",l:"Eitt sindur forvitin/forvitin",d:"Opin fyri nýtt"},
+        {v:"aevintyr",l:"Ævintýrsligur",d:"Vís mær okkurt óvanligt"}]},
  {key:"slag",title:"Hvat slag av víni?",sub:"Vel eitt ella fleiri sløg, ella lat okkum velja.",
-  help:"Tú kanst velja fleiri sløg. Veitst tú ikki, vel «Vís mær alt».",skip:[],swatch:true,multi:true,exclusive:"any",
+  help:"Tú kanst velja fleiri sløg. Veitst tú ikki, hvat tú skalt velja, so vel «Vís mær alt».",skip:[],swatch:true,multi:true,exclusive:"any",
   opts:[{v:"red",l:"Reyðvín",c:"oklch(0.45 0.13 25)"},{v:"white",l:"Hvítvín",c:"oklch(0.88 0.09 95)"},
         {v:"sparkling",l:"Brúsandi",c:"oklch(0.84 0.10 90)"},{v:"sweet",l:"Søtt & dessert",c:"oklch(0.62 0.13 55)"},
         {v:"orange",l:"Orange & natúr",c:"oklch(0.70 0.14 55)"},{v:"any",l:"Vís mær alt",c:"conic"}]},
- {key:"matur",title:"Hvat skal á borðið?",sub:"Vit nýta Rúsans egnu matmerki at finna samsvar.",
-  help:"Vel matin, sum vínið skal fylgja. Velur tú einki, mæla vit bara eftir smakki.",skip:"none",grid:true,
+ {key:"matur",title:"Hvat skal á borðið?",sub:"Vit nýta Rúsans egnu matmerki til at finna gott samsvar.",
+  help:"Vel matin, sum vínið skal hóska til. Velur tú einki, mæla vit til eftir smakki.",skip:"none",grid:true,
   opts:[{v:"neytakjot"},{v:"lambskjot"},{v:"svinakjot"},{v:"flogfenadur"},{v:"villinidjor"},{v:"fiskur"},
         {v:"skeljadjor"},{v:"ostur"},{v:"dessertir"},{v:"fordrykkir"},{v:"kalvakjot"},{v:"none",l:"Bara at drekka",gl:"🍷"}]},
- {key:"smakkur",title:"Hvørjar smakkir tona tær?",sub:"Vel so nógv tú vilt, eisini frá mati og drekka, ikki bara víni.",
-  help:"Dámar tær kaffi, ber ella lakris í øðrum, hóska tær ofta vín við sama smakki.",skip:[],grid:true,multi:true,
+ {key:"smakkur",title:"Hvørjir smakkir dáma tær?",sub:"Vel so nógv, sum tú vilt — eisini smakkir úr mati og drekkivørum, ikki bara úr víni.",
+  help:"Dámar tær kaffi, ber ella lakris í øðrum, hóska vín við somu smakktónum ofta væl til tín.",skip:[],grid:true,multi:true,
   opts:[{v:"ber",l:"Ber",gl:"🫐",tags:["Ber"]},{v:"kaffi",l:"Kaffi & sjokoláta",gl:"☕",tags:["Kaffi · sjokoláta"]},
         {v:"lakris",l:"Lakris",gl:"🖤",tags:["Lakris"]},{v:"sitrus",l:"Sitrus & frukt",gl:"🍋",tags:["Sitrus"]},
         {v:"krydd",l:"Krydd",gl:"🌶️",tags:["Krydd"]},{v:"eik",l:"Eik & vanilja",gl:"🪵",tags:["Eik","Vanilja"]},
         {v:"hunang",l:"Hunang",gl:"🍯",tags:["Hunang"]},{v:"frisk",l:"Frískt & mineralskt",gl:"💧",tags:["Frísk sýra","Mineralskt"]},
         {v:"blom",l:"Blómut",gl:"🌸",tags:["Blómut"]}]},
- {key:"fylla",title:"Hvussu kraftigt?",sub:"Fylla er, hvussu «tungt» vínið kennist í munninum.",
-  help:"Lætt er mjúkt og leskiligt. Kraftigt er fylt og intenst.",skip:"any",
+ {key:"fylla",title:"Hvussu kraftmikið?",sub:"Fylla sigur, hvussu «tungt» vínið kennist í munninum.",
+  help:"Lætt er mjúkt og leskiligt. Kraftmikið er fylt og intenst.",skip:"any",
   opts:[{v:"1",l:"Lætt",d:"Mjúkt og leskiligt"},{v:"2",l:"Miðal",d:"Væl javnvigað"},
-        {v:"3",l:"Kraftigt",d:"Fylt og intenst"},{v:"any",l:"Sama mær",d:"Eingin fyrimunur"}]},
+        {v:"3",l:"Kraftmikið",d:"Fylt og intenst"},{v:"any",l:"Sama mær",d:"Eingin fyrimunur"}]},
  {key:"sott",title:"Turt ella søtt?",sub:"Frá turrum (lítil søtleiki) til søtt (greiður søtleiki).",
   help:"Tey flestu borðvín eru turr. Søt vín eru ofta til dessert.",skip:"any",
   opts:[{v:"turt",l:"Turt",d:"Lítil ella eingin søtleiki"},{v:"halvturt",l:"Hálvturt",d:"Eitt sindur av søtleika"},
         {v:"sott",l:"Søtt",d:"Greiður søtleiki"},{v:"any",l:"Sama mær",d:"Eingin fyrimunur"}]},
  {key:"pris",title:"Hvat má tað kosta?",sub:"Prísur við MVG fyri eina fløsku.",
-  help:"Vit vísa bert vín innan tínum prísmarki.",skip:"any",
-  opts:[{v:"a",l:"Undir 100 kr",d:"Hvørsdagsvín",lo:0,hi:100},{v:"b",l:"100–200 kr",d:"Miðallag",lo:100,hi:200},
+  help:"Vit vísa bert vín innan fyri títt prísmark.",skip:"any",
+  opts:[{v:"a",l:"Undir 100 kr",d:"Gerandisvín",lo:0,hi:100},{v:"b",l:"100–200 kr",d:"Miðallag",lo:100,hi:200},
         {v:"c",l:"Yvir 200 kr",d:"Til serlig høvi",lo:200,hi:1e9},{v:"any",l:"Sama mær",d:"Eingin mark"}]}
 ];
 const Qmap=Object.fromEntries(Q.map(q=>[q.key,q]));
@@ -355,14 +355,14 @@ function renderIntro(){
   actions.className='actions show';
   actions.innerHTML=`<div class="row"><button class="cta full" onclick="step=1;render()">Byrja</button></div>`;
   main.innerHTML=`<section class="screen"><div class="hero">
-    <h1 class="intro-title">Finn vínið,<br>ið hóskar tær</h1>
-    <p class="intro-sub">Svara nøkrum spurningum um mat og smakk. So leita vit í Rúsans skrá eftir vínum, ið passa tær, og síðani kanst tú finstilla tilmælini.</p>
+    <h1 class="intro-title">Finn vínið,<br>ið hóskar til tín</h1>
+    <p class="intro-sub">Svara nøkrum spurningum um mat og smakk. So leita vit í Rúsans skrá eftir vínum, ið hóska til tín, og síðani kanst tú fínstilla tilmælini.</p>
     <div class="facts">
       <div class="fact"><b>${W.length}</b><span>vín í skránni</span></div>
-      <div class="fact"><b>${Q.length}</b><span>stutt spurningar</span></div>
+      <div class="fact"><b>${Q.length}</b><span>stuttir spurningar</span></div>
       <div class="fact"><b>${new Set(W.map(w=>w.c)).size}</b><span>lond</span></div>
     </div>
-    <div class="demo-note${usingReal?'':' show'}">Tú koyrir á demo-dátum. Legg <b>wines.js</b> í somu mappu fyri allar ${'~530'} vørurnar.</div>
+    <div class="demo-note${usingReal?'':' show'}">Tú koyrir við demo-dátum. Legg <b>wines.js</b> í somu mappu fyri at fáa allar ${'~530'} vørurnar.</div>
   </div></section>`;
 }
 
@@ -475,7 +475,7 @@ function profileChips(){
   return c;
 }
 
-const SORTS=[['match','Best samsvar'],['plo','Prísur ↑'],['phi','Prísur ↓'],['rate','Hægsta meting']];
+const SORTS=[['match','Besta samsvar'],['plo','Prísur ↑'],['phi','Prísur ↓'],['rate','Hægsta meting']];
 function sortBar(){return `<div class="sortbar">`+SORTS.map(([v,l])=>`<button class="sortpill ${sortMode===v?'on':''}" onclick="setSort('${v}')">${l}</button>`).join('')+`</div>`;}
 function setSort(m){sortMode=m;render(true);}
 function sortList(list){const a=list.slice();
@@ -489,15 +489,15 @@ function renderResults(){
   const chips=profileChips();
   actions.className='actions show';
   actions.innerHTML=`<div class="row"><button class="cta full" onclick="restart()">Royn av nýggjum</button></div>`;
-  const head=`<section class="screen"><div class="eyebrow">Tínar samsvaringar</div>
-    <h1>${list.length?'Hetta mæla vit til':'Eingin púra samsvar'}</h1>
+  const head=`<section class="screen"><div class="eyebrow">Tíni úrslit</div>
+    <h1>${list.length?'Hetta mæla vit til':'Einki fullkomið samsvar'}</h1>
     ${chips.length?`<div class="profile">${chips.map(x=>`<span class="pchip">${x}</span>`).join('')}</div>`:''}`;
   if(!list.length){
     main.innerHTML=head+`<div class="empty"><div class="e-ic">🍇</div>
-      <p>Ongin vín svaraðu til øll vølini. Royn eitt breiðari úrval.</p></div></section>`;return;}
+      <p>Einki vín samsvaraði við øll valini. Royn eitt breiðari úrval.</p></div></section>`;return;}
   const cards=list.slice(0,20).map((m,idx)=>card(m,idx)).join('');
   main.innerHTML=head
-    +`<p class="rcount">${list.length} vín hóska. Brúka 👍 og 👎 fyri at finstilla.</p>`
+    +`<p class="rcount">${list.length} vín hóska til. Brúka 👍 og 👎 fyri at fínstilla.</p>`
     +sortBar()+cards+`</section>`;
 }
 
@@ -511,7 +511,7 @@ function card(m,idx){
   const pairs=[...w.pr.map(p=>({p,d:0})),...(w.dv||[]).filter(p=>!w.pr.includes(p)).map(p=>({p,d:1}))]
     .map(o=>FOOD[o.p]?`<span class="pair ${o.d?'d':''}">${FOOD[o.p][0]} ${FOOD[o.p][1]}${o.d?' ·':''}</span>`:'').join('');
   return `<article class="wine ${best?'best':''}">
-    ${best?'<span class="best-tag">Tín besta samsvaring</span><br>':''}
+    ${best?'<span class="best-tag">Títt besta samsvar</span><br>':''}
     <button class="heart ${isFav(w.id)?'on':''}" onclick="toggleFav('${w.id}',this)" aria-label="Goym">♥</button>
     <div class="wtop">
       <div class="bottle"><img loading="lazy" src="https://rusan.fo/Images/Items/W50/${w.im}.jpg" alt="" onerror="this.parentNode.style.display='none'"></div>
@@ -528,15 +528,15 @@ function card(m,idx){
       <span class="rate"><span class="stars">${stars}</span><br>${(+w.r).toFixed(1)} · ${w.vo} metingar</span>
     </div>
     <div class="refine">
-      <button class="rbtn up" onclick="thumb('${w.id}',1)"><span class="x">👍</span> Meira sum hetta</button>
+      <button class="rbtn up" onclick="thumb('${w.id}',1)"><span class="x">👍</span> Meira av hesum slagnum</button>
       <button class="rbtn down" onclick="thumb('${w.id}',-1)"><span class="x">👎</span> Minni</button>
     </div>
-    <button class="more" onclick="toggleDetail('${w.id}',this)">${open.has(w.id)?'Less':'Meira um vínið'}</button>
+    <button class="more" onclick="toggleDetail('${w.id}',this)">${open.has(w.id)?'Minni um vínið':'Meira um vínið'}</button>
     <div class="detail ${open.has(w.id)?'open':''}" id="d-${w.id}">
-      ${m.note?`<p>${m.note}</p>`:'<p style="color:var(--faint)">Eingin smakkalýsing.</p>'}
+      ${m.note?`<p>${m.note}</p>`:'<p style="color:var(--faint)">Eingin smakkfrágreiðing.</p>'}
       ${pairs?`<div class="lbl">Hóskar til</div><div class="pair-row">${pairs}</div>`:''}
       ${m.tags.length?`<div class="lbl">Smakkmerki</div><div class="pair-row">${m.tags.map(t=>`<span class="pair">${t}</span>`).join('')}</div>`:''}
-      <a class="shoplink" href="https://rusan.fo/ShopItem/VIN/0/${w.id}/STK" target="_blank" rel="noopener">Sí hjá Rúsan →</a>
+      <a class="shoplink" href="https://rusan.fo/ShopItem/VIN/0/${w.id}/STK" target="_blank" rel="noopener">Sí hjá Rúsuni →</a>
     </div>
   </article>`;
 }
@@ -545,15 +545,15 @@ function thumb(id,dir){
   const w=W.find(x=>x.id===id); if(!w)return;
   const tags=flavAll(cleanNote(w));
   if(dir>0){liked.add(id);disliked.delete(id);tags.forEach(t=>REFINE.tags[t]=(REFINE.tags[t]||0)+1.5);REFINE.type[w.k]=(REFINE.type[w.k]||0)+1;
-    toast("Vit leita eftir fleiri sum hesum 👍");}
+    toast("Vit leita eftir fleiri vínum sum hesum 👍");}
   else{disliked.add(id);liked.delete(id);tags.forEach(t=>REFINE.tags[t]=(REFINE.tags[t]||0)-1.5);REFINE.type[w.k]=(REFINE.type[w.k]||0)-1;
-    toast("Tikið burtur. Vit stilla um.");}
+    toast("Tikið burtur. Vit tillaga úrslitini.");}
   render(true);
 }
 function toggleDetail(id,btn){
   const el=document.getElementById('d-'+id); if(!el)return;
   if(open.has(id)){open.delete(id);el.classList.remove('open');btn.textContent='Meira um vínið';}
-  else{open.add(id);el.classList.add('open');btn.textContent='Less';}
+  else{open.add(id);el.classList.add('open');btn.textContent='Minni um vínið';}
 }
 function restart(){step=0;A.roynd=A.matur=A.fylla=A.sott=A.pris=null;A.slag=[];A.smakkur=[];sortMode='match';
   REFINE.tags={};REFINE.type={};liked.clear();disliked.clear();open.clear();render();}
@@ -562,12 +562,12 @@ function restart(){step=0;A.roynd=A.matur=A.fylla=A.sott=A.pris=null;A.slag=[];A
 function openFav(){onFav=true;render();}
 function closeFav(){onFav=false;render();}
 function flavourLine(w){
-  if(w.k==='sparkling')return "Til eina stóra løtu 🥂";
-  if(w.k==='sweet'||w.s==='sott')return "Sætt at enda við 🍮";
+  if(w.k==='sparkling')return "Til eina hátíðarliga løtu 🥂";
+  if(w.k==='sweet'||w.s==='sott')return "Søtt at enda við 🍮";
   if(w.af)return "Gott uttan alkohol ✨";
-  if(w.k==='red'&&w.b===3)return "Kraftigur til kjøtið 🍷";
+  if(w.k==='red'&&w.b===3)return "Kraftmikið til kjøtið 🍷";
   if(w.k==='white')return "Frískt og lætt 🤍";
-  if(w.k==='orange')return "Eitthvørt øðrvísi 🍊";
+  if(w.k==='orange')return "Okkurt øðrvísi 🍊";
   return "Eitt gott val 🍷";
 }
 function toggleFav(id,el){
@@ -583,7 +583,7 @@ function renderFav(){
     <button class="iconbtn" onclick="closeFav()" aria-label="Aftur" style="margin-left:-8px">‹</button>
     <div><div class="eyebrow" style="margin:0">Tíni vín</div><h1 style="margin-top:2px">Yndisvín</h1></div></div>`;
   if(!ids.length){main.innerHTML=head+`<div class="empty"><div class="e-ic">🤍</div>
-    <p>Eingin yndisvín enn.<br>Trýst á hjartað á einum víni og legg eina lítla heilsan afturat.</p></div></section>`;return;}
+    <p>Eingi yndisvín enn.<br>Trýst á hjartað á einum víni og legg eina lítla heilsu afturat.</p></div></section>`;return;}
   const cards=ids.map(id=>{
     const w=W.find(x=>x.id===id);if(!w)return'';
     const tags=[`<span class="tag">${w.t}</span>`,`<span class="tag">${BODY[w.b]}</span>`,`<span class="tag">${SWEET[w.s]||''}</span>`].join('');
@@ -596,8 +596,8 @@ function renderFav(){
           <div class="worigin">${origin(w.c)} · ${w.p.toLocaleString('da-DK',{minimumFractionDigits:2})} kr</div>
           <div class="tags" style="margin-top:8px">${tags}</div></div></div>
       <div class="favmsg">${flavourLine(w)}</div>
-      <div class="notelbl">Mín heilsan</div>
-      <textarea class="note" rows="2" placeholder="Skriva eina lítla heilsan ella minnisseðil…" oninput="setNote('${w.id}',this.value)">${note}</textarea>
+      <div class="notelbl">Mín heilsa</div>
+      <textarea class="note" rows="2" placeholder="Skriva eina lítla heilsu ella ein minnisseðil…" oninput="setNote('${w.id}',this.value)">${note}</textarea>
     </article>`;
   }).join('');
   main.innerHTML=head+`<p class="rcount">${ids.length} goymd vín</p>${cards}</section>`;
